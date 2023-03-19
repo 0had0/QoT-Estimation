@@ -19,7 +19,7 @@ class Model:
         self.output = None
 
     def fit(self, x, y):
-        x_pi, x_exp, y_pi, y_exp = train_test_split(x, y, test_size=0.1, random_state=75)
+        x_pi, x_exp, y_pi, y_exp = train_test_split(x, y, test_size=0.5, random_state=75)
         self.pi_model.fit(x_pi, y_pi)
         self.pi_prediction_df = self.pi_model.prediction_df(x_exp, y_exp)
 
