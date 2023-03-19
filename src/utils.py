@@ -25,6 +25,10 @@ def get_data():
     return preprocess(d[0], t[0])
 
 
+def get_data_of_second_dataset():
+    return preprocess(*load_dataset('../datasets/lightpath_dataset_4.nc'))
+
+
 def split_on_mod_order_16(d: pd.DataFrame, t: pd.DataFrame) -> (pd.DataFrame, pd.DataFrame):
     is_mod_order_16 = (d['mod_order'] == 16.0)
     return (

@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from prediction_uncertainty_model import PredictionIntervalModel
 from explainer_model import ExplanationClassifier
 
-from utils import get_crossing_threshold, get_data, calculate_th
+from utils import get_crossing_threshold, get_data, calculate_th, get_data_of_second_dataset
 
 
 class Model:
@@ -72,6 +72,7 @@ class Model:
 
 if __name__ == '__main__':
     data, target = get_data()
+    # data, target = get_data_of_second_dataset()
     X_train, X_test, y_train, y_test = train_test_split(data, target['ber'], test_size=0.20, random_state=75)
 
     threshold = calculate_th(target[['class', 'ber']], 'ber')
