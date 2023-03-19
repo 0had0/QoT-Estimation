@@ -16,6 +16,7 @@ class Model:
         self.th = th
         self.include_original_features = include_original_features
         self.include_prediction_interval = include_prediction_interval
+        self.output = None
 
     def fit(self, x, y):
         x_pi, x_exp, y_pi, y_exp = train_test_split(x, y, test_size=0.1, random_state=75)
@@ -58,7 +59,15 @@ class Model:
             for is_valid_prediction, class_pred in zip(out['is_valid_prediction'], out['class_pred'])
         ]
 
+        self.output = out
+
         return out['corrected_prediction'].values, out
+
+    def evaluate_model_2(self, y):
+        y_predicted = self.output[self.output['is_uncertain'] == 1]['corrected_prediction'].values
+        y_t = y[y.index.isin(self.output[self.output['is_uncertain'] == 1].index)]
+        print(confusion_matrix(y_t, y_predicted))
+        print(classification_report(y_t, y_predicted))
 
 
 if __name__ == '__main__':
@@ -82,24 +91,19 @@ if __name__ == '__main__':
     y_pred_2, _ = model_2.predict(X_test)
     y_pred_3, _ = model_3.predict(X_test)
 
-    y_true = target.loc[y_test.index, 'class'].values
+    y_true = target.loc[y_test.index, 'class']
 
     print('Uncertainty detection + correction (shap values only)')
-
-    print(confusion_matrix(y_true, y_pred))
-    print(classification_report(y_true, y_pred))
+    model.evaluate_model_2(y_true)
 
     print('Uncertainty detection + correction (shap values + data features)')
-    print(confusion_matrix(y_true, y_pred_1))
-    print(classification_report(y_true, y_pred_1))
+    model_1.evaluate_model_2(y_true)
 
     print('Uncertainty detection + correction (shap values + data features + prediction interval)')
-    print(confusion_matrix(y_true, y_pred_2))
-    print(classification_report(y_true, y_pred_2))
+    model_2.evaluate_model_2(y_true)
 
     print('Uncertainty detection + correction (shap values + prediction interval)')
-    print(confusion_matrix(y_true, y_pred_3))
-    print(classification_report(y_true, y_pred_3))
+    model_3.evaluate_model_2(y_true)
 
     print("base model")
 
