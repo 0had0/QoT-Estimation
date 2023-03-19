@@ -10,16 +10,20 @@ from utils import get_data
 def get_tuned_models():
     quantiles_params = pickle.load(open('./cache/gradient_boost_q_params.pkl', 'rb'))
     ms = {
-        'y_lower' if float(a) == np.array(list(quantiles_params.keys())).astype(float).min() else 'y_upper': HistGradientBoostingRegressor(
+        'y_lower' if float(a) == np.array(list(quantiles_params.keys())).astype(float).min()
+        else 'y_upper': HistGradientBoostingRegressor(
             loss="quantile",
             quantile=float(a),
+            random_state=75,
             **param
         )
         for a, param in quantiles_params.items()
     }
 
     ms['y_pred'] = HistGradientBoostingRegressor(
-        loss="squared_error", **pickle.load(open('./cache/gradient_boost_se_params.pkl', 'rb'))
+        loss="squared_error",
+        random_state=75,
+        **pickle.load(open('./cache/gradient_boost_se_params.pkl', 'rb'))
     )
 
     return ms
@@ -61,6 +65,7 @@ def create_models(aas: [float, float]) -> dict:
             early_stopping=True,
             verbose=2
         ) for a in aas}
+
 
 if __name__ == '__main__':
     alphas = [0.025, 0.975]
