@@ -1,0 +1,119 @@
+[Model 1 evaluation]: 92.95% certain outcome, 7.048% uncertain outcome
+[[     0     10]
+ [     0 250644]]
+              precision    recall  f1-score   support
+
+           0       0.00      0.00      0.00        10
+           1       1.00      1.00      1.00    250644
+
+    accuracy                           1.00    250654
+   macro avg       0.50      0.50      0.50    250654
+weighted avg       1.00      1.00      1.00    250654
+
+[Model 2 evaluation]: [SHAP values]
+[[16662   362]
+ [  307  1674]]
+              precision    recall  f1-score   support
+
+         0.0       0.98      0.98      0.98     17024
+         1.0       0.82      0.85      0.83      1981
+
+    accuracy                           0.96     19005
+   macro avg       0.90      0.91      0.91     19005
+weighted avg       0.97      0.96      0.97     19005
+
+[Model 2 evaluation]: [SHAP values] [Input Data Features]
+[[16717   307]
+ [  266  1715]]
+              precision    recall  f1-score   support
+
+         0.0       0.98      0.98      0.98     17024
+         1.0       0.85      0.87      0.86      1981
+
+    accuracy                           0.97     19005
+   macro avg       0.92      0.92      0.92     19005
+weighted avg       0.97      0.97      0.97     19005
+
+[Model 2 evaluation]: [SHAP values] [Prediction Interval]
+[[16662   362]
+ [  307  1674]]
+              precision    recall  f1-score   support
+
+         0.0       0.98      0.98      0.98     17024
+         1.0       0.82      0.85      0.83      1981
+
+    accuracy                           0.96     19005
+   macro avg       0.90      0.91      0.91     19005
+weighted avg       0.97      0.96      0.97     19005
+
+[Model 2 evaluation]: [SHAP values] [Input Data Features] [Prediction Interval]
+[[16725   299]
+ [  252  1729]]
+              precision    recall  f1-score   support
+
+         0.0       0.99      0.98      0.98     17024
+         1.0       0.85      0.87      0.86      1981
+
+    accuracy                           0.97     19005
+   macro avg       0.92      0.93      0.92     19005
+weighted avg       0.97      0.97      0.97     19005
+
+[Base Model]: Regression + Classification
+[[ 16391    643]
+ [   301 252324]]
+              precision    recall  f1-score   support
+
+         0.0       0.98      0.96      0.97     17034
+         1.0       1.00      1.00      1.00    252625
+
+    accuracy                           1.00    269659
+   macro avg       0.99      0.98      0.99    269659
+weighted avg       1.00      1.00      1.00    269659
+
+[Pipeline]: [SHAP values]
+[[ 16662    372]
+ [   307 252318]]
+              precision    recall  f1-score   support
+
+         0.0       0.98      0.98      0.98     17034
+         1.0       1.00      1.00      1.00    252625
+
+    accuracy                           1.00    269659
+   macro avg       0.99      0.99      0.99    269659
+weighted avg       1.00      1.00      1.00    269659
+
+[Pipeline]: [SHAP values] [Input Data Features]
+[[ 16717    317]
+ [   266 252359]]
+              precision    recall  f1-score   support
+
+         0.0       0.98      0.98      0.98     17034
+         1.0       1.00      1.00      1.00    252625
+
+    accuracy                           1.00    269659
+   macro avg       0.99      0.99      0.99    269659
+weighted avg       1.00      1.00      1.00    269659
+
+[Pipeline]: [SHAP values] [Prediction Interval]
+[[ 16725    309]
+ [   252 252373]]
+              precision    recall  f1-score   support
+
+         0.0       0.99      0.98      0.98     17034
+         1.0       1.00      1.00      1.00    252625
+
+    accuracy                           1.00    269659
+   macro avg       0.99      0.99      0.99    269659
+weighted avg       1.00      1.00      1.00    269659
+
+[Pipeline]: [SHAP values] [Input Data Features] [Prediction Interval]
+[[ 16662    372]
+ [   307 252318]]
+              precision    recall  f1-score   support
+
+         0.0       0.98      0.98      0.98     17034
+         1.0       1.00      1.00      1.00    252625
+
+    accuracy                           1.00    269659
+   macro avg       0.99      0.99      0.99    269659
+weighted avg       1.00      1.00      1.00    269659

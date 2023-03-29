@@ -1,11 +1,12 @@
 import numpy as np
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.model_selection import train_test_split
+import shap
 
 from prediction_uncertainty_model import PredictionIntervalModel
 from explainer_model import ExplanationClassifier
 
-from utils import get_crossing_threshold, get_data, calculate_th, get_data_of_second_dataset
+from utils import get_crossing_threshold, get_data, calculate_th, get_data_of_second_dataset, get_true_not_crossing_thrushold, get_false_not_crossing_thrushold
 
 
 class Model:
@@ -63,6 +64,20 @@ class Model:
 
         return out['corrected_prediction'].values, out
 
+    def evaluate_model_1(self, y):
+        y_uncertain = self.output[self.output['is_uncertain'] == 1]['corrected_prediction']
+        y_certain = self.output[self.output['is_uncertain'] != 1]['corrected_prediction']
+
+        print(
+            f'[Model 1 evaluation]: {len(y_certain) / len(self.output) * 100:.4}% certain outcome, '
+            f'{len(y_uncertain) / len(self.output) * 100:.4}% uncertain outcome'
+        )
+
+        y_t = y[y.index.isin(y_certain.index)]
+
+        print(confusion_matrix(y_t, y_certain.values))
+        print(classification_report(y_t, y_certain.values))
+
     def evaluate_model_2(self, y):
         y_predicted = self.output[self.output['is_uncertain'] == 1]['corrected_prediction'].values
         y_t = y[y.index.isin(self.output[self.output['is_uncertain'] == 1].index)]
@@ -71,46 +86,62 @@ class Model:
 
 
 if __name__ == '__main__':
-    data, target = get_data()
-    # data, target = get_data_of_second_dataset()
+    # data, target = get_data()
+    data, target = get_data_of_second_dataset()
     X_train, X_test, y_train, y_test = train_test_split(data, target['ber'], test_size=0.20, random_state=75)
 
     threshold = calculate_th(target[['class', 'ber']], 'ber')
 
     model = Model(th=threshold)
-    model_1 = Model(th=threshold, include_original_features=True)
-    model_2 = Model(th=threshold, include_original_features=True, include_prediction_interval=True)
-    model_3 = Model(th=threshold, include_prediction_interval=True)
+    # model_1 = Model(th=threshold, include_original_features=True)
+    # model_2 = Model(th=threshold, include_original_features=True, include_prediction_interval=True)
+    # model_3 = Model(th=threshold, include_prediction_interval=True)
 
     model.fit(X_train, y_train)
-    model_1.fit(X_train, y_train)
-    model_2.fit(X_train, y_train)
-    model_3.fit(X_train, y_train)
+    # model_1.fit(X_train, y_train)
+    # model_2.fit(X_train, y_train)
+    # model_3.fit(X_train, y_train)
 
     y_pred, out = model.predict(X_test)
-    y_pred_1, _ = model_1.predict(X_test)
-    y_pred_2, _ = model_2.predict(X_test)
-    y_pred_3, _ = model_3.predict(X_test)
+    # y_pred_1, _ = model_1.predict(X_test)
+    # y_pred_2, _ = model_2.predict(X_test)
+    # y_pred_3, _ = model_3.predict(X_test)
 
     y_true = target.loc[y_test.index, 'class']
 
-    print('Uncertainty detection + correction (shap values only)')
-    model.evaluate_model_2(y_true)
+    # print('Uncertainty detection + correction (shap values only)')
+    # model.evaluate_model_2(y_true)
+    #
+    # print('Uncertainty detection + correction (shap values + data features)')
+    # model_1.evaluate_model_2(y_true)
+    #
+    # print('Uncertainty detection + correction (shap values + data features + prediction interval)')
+    # model_2.evaluate_model_2(y_true)
+    #
+    # print('Uncertainty detection + correction (shap values + prediction interval)')
+    # model_3.evaluate_model_2(y_true)
+    #
+    # print("base model")
 
-    print('Uncertainty detection + correction (shap values + data features)')
-    model_1.evaluate_model_2(y_true)
+    # y_pred_base = (
+    #         out['y_pred'] < threshold
+    # ).astype(int)
+    #
+    # print(confusion_matrix(y_true, y_pred_base))
+    # print(classification_report(y_true, y_pred_base))
 
-    print('Uncertainty detection + correction (shap values + data features + prediction interval)')
-    model_2.evaluate_model_2(y_true)
+    # model.evaluate_model_1(y_true.astype(int))
 
-    print('Uncertainty detection + correction (shap values + prediction interval)')
-    model_3.evaluate_model_2(y_true)
+    y_uncertain = out[out['is_uncertain'] == 1]
+    y_certain = out[~out.index.isin(y_uncertain.index)]['class_pred']
 
-    print("base model")
+    assert len(y_uncertain) + len(y_certain) == len(out)
 
-    y_pred_base = (
-            out['y_pred'] < threshold
-    ).astype(int)
+    y_t = y_true[y_true.index.isin(y_certain.index)].values.astype(int)
+    y_p = y_certain.values.astype(int)
 
-    print(confusion_matrix(y_true, y_pred_base))
-    print(classification_report(y_true, y_pred_base))
+    print(np.unique(y_t, return_counts=True))
+    print(np.unique(y_p, return_counts=True))
+
+    print(confusion_matrix(y_t, y_p))
+    print(classification_report(y_t, y_p))
