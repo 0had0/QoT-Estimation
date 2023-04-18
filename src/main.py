@@ -82,7 +82,7 @@ class Model:
         y_predicted = self.output[self.output['is_uncertain'] == 1]['corrected_prediction'].values
         y_t = y[y.index.isin(self.output[self.output['is_uncertain'] == 1].index)]
         print(confusion_matrix(y_t, y_predicted))
-        print(classification_report(y_t, y_predicted))
+        print(classification_report(y_t, y_predicted, digits=4))
 
 
 if __name__ == '__main__':
